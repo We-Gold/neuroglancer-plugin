@@ -1,0 +1,4 @@
+fastapi
+requests
+uvicorn
+neuroglancer==2.40.1
