@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import styles from "./styles.module.css"
 import Menu from "./Menu"
 import Modal from "./Modal"
@@ -22,7 +22,7 @@ export type DirectoryData = {
 	}
 }
 
-function TemplatePage(): JSX.Element {
+function App(): JSX.Element {
 	const [connected, setConnected] = useState<boolean>(false)
 	const [ngViewerURL, setNgViewerURL] = useState<string | null>(null)
 	const [fetchingNGURL, setFetchingNGURL] = useState<boolean>(false)
@@ -31,10 +31,10 @@ function TemplatePage(): JSX.Element {
 		null
 	)
 
-	const [showMenu, setShowMenu] = useState<boolean>(false)
-
 	const [showModal, setShowModal] = useState<boolean>(false)
 	const [form, setForm] = useState<string>("")
+
+	const iframeRef = useRef<HTMLIFrameElement>(null)
 
 	useEffect(() => {
 		const runFetch = () => {
@@ -107,14 +107,35 @@ function TemplatePage(): JSX.Element {
 		}
 	}, [])
 
+	const openFullscreen = () => {
+		if (iframeRef.current) {
+			iframeRef.current.requestFullscreen()
+		}
+	}
+
+	const closeFullscreen = () => {
+		document.exitFullscreen()
+	}
+
+	useEffect(() => {
+		const listener = (event: KeyboardEvent) => {
+			if (event.key === "Escape") closeFullscreen()
+			if (event.key === "f") openFullscreen()
+		}
+
+		window.addEventListener("keydown", listener)
+
+		return () => {
+			window.removeEventListener("keydown", listener)
+		}
+	}, [])
+
 	const onUpload = () => {
-		setShowMenu(false)
 		setShowModal(true)
 		setForm("upload")
 	}
 
 	const onDownload = () => {
-		setShowMenu(false)
 		setShowModal(true)
 		setForm("download")
 	}
@@ -184,9 +205,11 @@ function TemplatePage(): JSX.Element {
 			{connected ? (
 				ngViewerURL ? (
 					<iframe
+						ref={iframeRef}
 						src={ngViewerURL}
 						className={styles.viewer}
 						title="Neuroglancer Viewer"
+						allowFullScreen
 					/>
 				) : (
 					<p className={styles.centeredText}>
@@ -197,10 +220,9 @@ function TemplatePage(): JSX.Element {
 				<p className={styles.centeredText}>Connecting to server...</p>
 			)}
 			<Menu
-				showMenu={showMenu}
-				setShowMenu={setShowMenu}
 				onUpload={onUpload}
 				onDownload={onDownload}
+				onFullscreen={openFullscreen}
 			/>
 			<Modal show={showModal} setShow={setShowModal}>
 				{form === "upload" ? (
@@ -219,5 +241,5 @@ function TemplatePage(): JSX.Element {
 	)
 }
 
-export default TemplatePage
+export default App
 
