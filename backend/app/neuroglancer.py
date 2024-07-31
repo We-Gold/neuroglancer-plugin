@@ -14,8 +14,8 @@ class CustomNeuroglancerArgs:
 
 
 class Neuroglancer:
-    def __init__(self):
-        self.config = CustomNeuroglancerArgs()
+    def __init__(self, config=CustomNeuroglancerArgs()):
+        self.config = config
 
         neuroglancer.cli.handle_server_arguments(self.config)
 
@@ -26,20 +26,42 @@ class Neuroglancer:
                 source="precomputed://gs://neuroglancer-public-data/flyem_fib-25/image"
             )
 
-        self.latest_state = {}
-        self.state_handled = False
-
-        self.viewer.actions.add("export-json", lambda s: self.save_state(s))
-
-        with self.viewer.config_state.txn() as s:
-            s.input_event_bindings.viewer["control+keys"] = "export-json"
-
     def get_url(self):
+        """
+        Get the URL of the Neuroglancer viewer.
+
+        This URL is accessible from the host machine, even when running in a Docker container.
+
+        Returns
+        -------
+        str
+            The URL of the Neuroglancer viewer.
+        """
+
         return f"http://{self.config.bind_address}:{self.config.bind_port}/v/{self.viewer.token}/"
 
     def get_state(self):
+        """
+        Get the current state of the Neuroglancer viewer as a JSON-compatible dictionary.
+
+        Returns
+        -------
+        dict
+            The current state of the Neuroglancer viewer.
+        """
+
         return self.viewer.state.to_json()
 
-    def save_state(self, state):
-        self.latest_state = state
-        self.state_handled = False
+    def set_state(self, state: dict):
+        """
+        Set the state of the Neuroglancer viewer.
+
+        Parameters
+        ----------
+        state : dict
+            The state to set the viewer to.
+        """
+
+        new_state = neuroglancer.viewer_state.ViewerState(json_data=state)
+
+        self.viewer.set_state(new_state)

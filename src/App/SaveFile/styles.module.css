@@ -1,0 +1,41 @@
+.label {
+    font-size: 16px;
+    color: #fff;
+    margin-right: 10px;
+}
+  
+.input {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    padding: 5px 10px;
+    margin-right: 10px;
+    outline: none;
+    font-size: 1rem;
+}
+
+.input:focus {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.saveButton {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.saveButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}

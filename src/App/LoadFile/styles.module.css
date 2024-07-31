@@ -1,0 +1,17 @@
+.hr {
+    border: none;
+    border-top: 1px solid rgba(200, 200, 200, 0.5);
+    margin: 0.5rem 0;
+    width: 98%;
+}
+
+.file {
+    font-size: 1.25rem;
+    width: 100%;
+    color: #dddddd;
+}
+
+.file:hover {
+    cursor: pointer;
+    color: #ffffff;
+}

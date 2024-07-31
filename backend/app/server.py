@@ -30,9 +30,14 @@ async def neuroglancer_url():
     return {"url": neuroglancer_instance.get_url()}
 
 
-@app.get("/neuroglancer-state")
-async def neuroglancer_state():
+@app.get("/get-neuroglancer-state")
+async def get_neuroglancer_state():
     return {"state": neuroglancer_instance.get_state()}
+
+
+@app.post("/set-neuroglancer-state")
+async def set_neuroglancer_state(state: dict):
+    neuroglancer_instance.set_state(state)
 
 
 @app.post("/copy-to-volume")
