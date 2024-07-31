@@ -140,6 +140,17 @@ function App(): JSX.Element {
 		setForm("download")
 	}
 
+	const onScreenshot = () => {
+		if (!directoryData || !directoryData.data.directoryPath) return
+
+		const directory = directoryData.data.directoryPath
+
+		fetch(
+			`http://localhost:${PORT}/save-neuroglancer-screenshot?directory_path="${directory}"`,
+			{ method: "POST" }
+		).catch(console.error)
+	}
+
 	const loadJSON = (file: string) => {
 		if (!directoryData || !directoryData.data.directoryPath) return
 
@@ -223,6 +234,7 @@ function App(): JSX.Element {
 				onUpload={onUpload}
 				onDownload={onDownload}
 				onFullscreen={openFullscreen}
+				onScreenshot={onScreenshot}
 			/>
 			<Modal show={showModal} setShow={setShowModal}>
 				{form === "upload" ? (

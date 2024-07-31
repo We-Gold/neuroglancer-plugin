@@ -1,7 +1,5 @@
 from app.server import app
-
-DOCKER_HOST = "0.0.0.0"
-DOCKER_PORT = 8000
+from app.constants import DOCKER_HOST, DOCKER_PORT
 
 
 def run_server():

@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import neuroglancer
 import neuroglancer.cli
 
+from app.constants import PLUGIN_NAME
+
 
 @dataclass
 class CustomNeuroglancerArgs:
@@ -20,6 +22,13 @@ class Neuroglancer:
         neuroglancer.cli.handle_server_arguments(self.config)
 
         self.viewer = neuroglancer.Viewer()
+
+        self.screenshot_saver = self.init_screenshot_saver()
+
+    def init_screenshot_saver(self):
+        directory = f"/volume/{PLUGIN_NAME}/"
+
+        return neuroglancer.ScreenshotSaver(self.viewer, directory)
 
     def get_url(self):
         """
@@ -60,3 +69,20 @@ class Neuroglancer:
         new_state = neuroglancer.viewer_state.ViewerState(json_data=state)
 
         self.viewer.set_state(new_state)
+
+    def take_screenshot(self):
+        """
+        Take a screenshot of the Neuroglancer viewer.
+
+        Returns
+        -------
+        str
+            The path to the saved screenshot.
+        """
+
+        try:
+            index, _ = self.screenshot_saver.capture()
+        except BaseException as error:
+            print(f"Error taking screenshot: {error}")
+
+        return "%07d.png" % index

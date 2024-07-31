@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.neuroglancer import Neuroglancer
 
-from app.volume_server import copy_to_volume
+from app.volume_server import copy_to_host
 
 neuroglancer_instance = Neuroglancer()
 
@@ -40,16 +40,26 @@ async def set_neuroglancer_state(state: dict):
     neuroglancer_instance.set_state(state)
 
 
-@app.post("/copy-to-volume")
-async def copy_to_volume_call(file_path: str):
-    # Copy a file from an absolute path on the host file system
-    # to the plugin folder in the volume ("/volume/PLUGIN_NAME/")
-    # sourcePath: absolute path of the file on the host file system
-    # targetPath: relative path of the file in the plugin folder in the volume
-    files = [
-        {"sourcePath": file_path, "targetPath": "./"},
-    ]
+@app.post("/save-neuroglancer-screenshot")
+async def save_neuroglancer_screenshot(directory_path: str):
+    filename = neuroglancer_instance.take_screenshot()
 
-    await copy_to_volume(files)
+    if filename is not None and isinstance(filename, str):
+        # Make sure the directory path ends with a "/" or "\" character
+        if not directory_path.endswith("/") and not directory_path.endswith("\\"):
+            # Attempt to determine the correct path separator
+            if "/" in directory_path:
+                directory_path += "/"
+            else:
+                directory_path += "\\"
 
-    return {"result": "File copied to volume!"}
+        file_path = directory_path + filename
+
+        # Copy the screenshot to the plugin folder in the volume
+        files = [
+            {"sourcePath": file_path, "targetPath": "./"},
+        ]
+
+        await copy_to_host(files)
+    else:
+        return {"error": "Failed to save screenshot."}

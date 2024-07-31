@@ -1,7 +1,7 @@
 import requests
 
-PLUGIN_NAME = "neuroglancer-plugin"
-VOLUME_SERVER_URL = "http://host.docker.internal:3001"
+from app.constants import PLUGIN_NAME, VOLUME_SERVER_URL
+
 
 async def copy_to_volume(files):
     data = {
