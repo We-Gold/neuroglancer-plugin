@@ -21,11 +21,6 @@ class Neuroglancer:
 
         self.viewer = neuroglancer.Viewer()
 
-        with self.viewer.txn() as s:
-            s.layers["image"] = neuroglancer.ImageLayer(
-                source="precomputed://gs://neuroglancer-public-data/flyem_fib-25/image"
-            )
-
     def get_url(self):
         """
         Get the URL of the Neuroglancer viewer.
