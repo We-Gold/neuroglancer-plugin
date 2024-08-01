@@ -5,6 +5,12 @@
     width: 98%;
 }
 
+.folder {
+    font-size: 1.25rem;
+    width: 100%;
+    color: #dddddd;
+}
+
 .file {
     font-size: 1.25rem;
     width: 100%;

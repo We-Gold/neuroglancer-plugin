@@ -17,9 +17,18 @@ export type DirectoryData = {
 	data: {
 		directoryPath: string | null
 		directoryName: string | null
-		files: string[]
-		isFolder: boolean[]
+		nodes: NodeChildren
 	}
+}
+
+export type FileSystemNode = {
+	name: string
+	path: string
+	children?: NodeChildren
+}
+
+export type NodeChildren = {
+	[key: string]: FileSystemNode
 }
 
 function App(): JSX.Element {
@@ -151,7 +160,7 @@ function App(): JSX.Element {
 		).catch(console.error)
 	}
 
-	const loadJSON = (file: string) => {
+	const loadJSON = (filePath: string) => {
 		if (!directoryData || !directoryData.data.directoryPath) return
 
 		const message: {
@@ -163,8 +172,8 @@ function App(): JSX.Element {
 		} = {
 			type: "read-file",
 			data: {
-				folder: directoryData.data.directoryPath,
-				fileName: file,
+				folder: "",
+				fileName: filePath,
 			},
 		}
 

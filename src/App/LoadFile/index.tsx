@@ -1,6 +1,7 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import styles from "./styles.module.css"
 
-import { DirectoryData } from ".."
+import { DirectoryData, FileSystemNode } from ".."
 
 function LoadFile({
 	directoryData,
@@ -19,19 +20,9 @@ function LoadFile({
 			</div>
 			{directoryDataExists ? (
 				<div style={{ width: "100%" }}>
-					{directoryData.data.files.map(
-						(file, index) =>
-							file.endsWith(".json") && (
-								<div
-									key={index}
-									className={`poppins-light ${styles.file}`}
-									onClick={() => loadJSON(file)}
-								>
-									<div>{file}</div>
-									<hr className={styles.hr} />
-								</div>
-							)
-					)}
+					{Object.values(directoryData.data.nodes).map((node) => (
+						<Node node={node} loadJSON={loadJSON} />
+					))}
 				</div>
 			) : (
 				<div>
@@ -44,6 +35,41 @@ function LoadFile({
 				</div>
 			)}
 		</>
+	)
+}
+
+function Node({
+	node,
+	loadJSON,
+}: {
+	node: FileSystemNode
+	loadJSON: (file: string) => void
+}): JSX.Element {
+	const isFolder = node.children !== undefined
+	const isEmpty =
+		node.children !== undefined && Object.keys(node.children).length === 0
+
+	const isJSON = node.name.endsWith(".json")
+
+	return (isFolder && !isEmpty) || isJSON ? (
+		<div
+			className={`poppins-light ${
+				isFolder ? styles.folder : styles.file
+			}`}
+			onClick={isFolder ? () => {} : () => loadJSON(node.path)}
+		>
+			<div>{node.name}</div>
+			<hr className={styles.hr} />
+			<div style={{ paddingLeft: "2rem" }}>
+				{isFolder
+					? Object.values(node.children!).map((child) => (
+							<Node node={child} loadJSON={loadJSON} />
+					  ))
+					: null}
+			</div>
+		</div>
+	) : (
+		<></>
 	)
 }
 
