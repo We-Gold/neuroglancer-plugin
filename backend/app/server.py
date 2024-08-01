@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.neuroglancer import Neuroglancer
-
+from app.helpers import combine_unknown_folder
 from app.volume_server import copy_to_host
 
 neuroglancer_instance = Neuroglancer()
@@ -46,14 +46,7 @@ async def save_neuroglancer_screenshot(directory_path: str):
 
     if filename is not None and isinstance(filename, str):
         # Make sure the directory path ends with a "/" or "\" character
-        if not directory_path.endswith("/") and not directory_path.endswith("\\"):
-            # Attempt to determine the correct path separator
-            if "/" in directory_path:
-                directory_path += "/"
-            else:
-                directory_path += "\\"
-
-        file_path = directory_path + filename
+        file_path = combine_unknown_folder(directory_path, filename)
 
         # Copy the screenshot to the plugin folder in the volume
         files = [

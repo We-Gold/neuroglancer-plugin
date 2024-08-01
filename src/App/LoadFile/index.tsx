@@ -21,7 +21,7 @@ function LoadFile({
 			{directoryDataExists ? (
 				<div style={{ width: "100%" }}>
 					{Object.values(directoryData.data.nodes).map((node) => (
-						<Node node={node} loadJSON={loadJSON} />
+						<Node node={node} loadJSON={loadJSON} key={node.path} />
 					))}
 				</div>
 			) : (
@@ -63,7 +63,11 @@ function Node({
 			<div style={{ paddingLeft: "2rem" }}>
 				{isFolder
 					? Object.values(node.children!).map((child) => (
-							<Node node={child} loadJSON={loadJSON} />
+							<Node
+								node={child}
+								loadJSON={loadJSON}
+								key={child.path}
+							/>
 					  ))
 					: null}
 			</div>
