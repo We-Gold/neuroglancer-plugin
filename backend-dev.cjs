@@ -24,11 +24,7 @@ async function cleanup() {
 
 // Setup signal handler for Ctrl+C (SIGINT)
 process.on('SIGINT', async () => {
-	try {
-		await cleanup()
-	} catch (e) {
-		console.error(e)
-	}
+	await cleanup()
 })
 
 // Maintain the process
