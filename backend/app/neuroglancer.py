@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import neuroglancer
 import neuroglancer.cli
 
-from app.constants import PLUGIN_NAME
+from app.constants import PLUGIN_NAME, HOST
 
 
 @dataclass
@@ -42,7 +42,7 @@ class Neuroglancer:
             The URL of the Neuroglancer viewer.
         """
 
-        return f"http://{self.config.bind_address}:{self.config.bind_port}/v/{self.viewer.token}/"
+        return f"http://{HOST}:{self.config.bind_port}/v/{self.viewer.token}/"
 
     def get_state(self):
         """
