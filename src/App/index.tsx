@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./styles.module.css"
 import Menu from "./Menu"
 import Modal from "./Modal"
@@ -42,8 +42,6 @@ function App(): JSX.Element {
 
 	const [showModal, setShowModal] = useState<boolean>(false)
 	const [form, setForm] = useState<string>("")
-
-	const iframeRef = useRef<HTMLIFrameElement>(null)
 
 	useEffect(() => {
 		const runFetch = () => {
@@ -117,9 +115,7 @@ function App(): JSX.Element {
 	}, [])
 
 	const openFullscreen = () => {
-		if (iframeRef.current) {
-			iframeRef.current.requestFullscreen()
-		}
+		document.documentElement.requestFullscreen()
 	}
 
 	const closeFullscreen = () => {
@@ -225,7 +221,6 @@ function App(): JSX.Element {
 			{connected ? (
 				ngViewerURL ? (
 					<iframe
-						ref={iframeRef}
 						src={ngViewerURL}
 						className={styles.viewer}
 						title="Neuroglancer Viewer"
