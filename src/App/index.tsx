@@ -43,6 +43,8 @@ function App(): JSX.Element {
 	const [showModal, setShowModal] = useState<boolean>(false)
 	const [form, setForm] = useState<string>("")
 
+	const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
+
 	useEffect(() => {
 		const runFetch = () => {
 			fetch(`http://localhost:${PORT}/`)
@@ -113,6 +115,13 @@ function App(): JSX.Element {
 			window.removeEventListener("message", listener)
 		}
 	}, [])
+
+	const toggleFullscreen = () => {
+		if (isFullscreen) closeFullscreen()
+		else openFullscreen()
+
+		setIsFullscreen(!isFullscreen)
+	}
 
 	const openFullscreen = () => {
 		document.documentElement.requestFullscreen()
@@ -237,7 +246,8 @@ function App(): JSX.Element {
 			<Menu
 				onUpload={onUpload}
 				onDownload={onDownload}
-				onFullscreen={openFullscreen}
+				onFullscreen={toggleFullscreen}
+				isFullscreen={isFullscreen}
 				onScreenshot={onScreenshot}
 			/>
 			<Modal show={showModal} setShow={setShowModal}>
