@@ -91,6 +91,7 @@ function App(): JSX.Element {
 				case "send-directory-contents":
 					setDirectoryData(result)
 					break
+				case "send-neuroglancer-json":
 				case "read-file-response":
 					// Use fetch to send the contents to the server,
 					// with the contents as the body of the request
